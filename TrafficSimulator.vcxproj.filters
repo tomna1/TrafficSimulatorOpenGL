@@ -18,42 +18,38 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.c">
+    <ClCompile Include="src\shaderProcessing.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="car.c">
+    <ClCompile Include="src\roads.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="roads.c">
+    <ClCompile Include="src\car.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shaderProcessing.c">
+    <ClCompile Include="src\main.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="points.c">
+    <ClCompile Include="src\points.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="car.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="roads.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="shaderProcessing.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="points.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <None Include="res\shaders\fragmentShader.shader" />
+    <None Include="res\shaders\vertexShader.shader" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="vertexShader.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
-    <None Include="fragmentShader.shader">
-      <Filter>Resource Files\Shaders</Filter>
-    </None>
+    <ClInclude Include="include\car.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\points.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\roads.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\shaderProcessing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

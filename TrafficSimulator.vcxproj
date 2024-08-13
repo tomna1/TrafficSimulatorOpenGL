@@ -18,6 +18,23 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\car.c" />
+    <ClCompile Include="src\main.c" />
+    <ClCompile Include="src\points.c" />
+    <ClCompile Include="src\roads.c" />
+    <ClCompile Include="src\shaderProcessing.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\shaders\fragmentShader.shader" />
+    <None Include="res\shaders\vertexShader.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\car.h" />
+    <ClInclude Include="include\points.h" />
+    <ClInclude Include="include\roads.h" />
+    <ClInclude Include="include\shaderProcessing.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -72,22 +89,22 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Dependencies\include;C:\CProjects\TrafficSimulator\Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir)Dependencies\include;C:\CProjects\TrafficSimulator\Dependencies\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\lib;C:\CProjects\TrafficSimulator\Dependencies\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Dependencies\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir)Dependencies\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\lib;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)Dependencies\include;C:\CProjects\TrafficSimulator\Dependencies\include;$(IncludePath)</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir)Dependencies\include;C:\CProjects\TrafficSimulator\Dependencies\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\lib;C:\CProjects\TrafficSimulator\Dependencies\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>$(SolutionDir)Dependencies\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)include;$(SolutionDir)Dependencies\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <LibraryPath>$(SolutionDir)\Dependencies\lib;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -154,23 +171,6 @@
       <AdditionalLibraryDirectories>$(SolutionDir)Dependencies\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="car.c" />
-    <ClCompile Include="main.c" />
-    <ClCompile Include="points.c" />
-    <ClCompile Include="roads.c" />
-    <ClCompile Include="shaderProcessing.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="car.h" />
-    <ClInclude Include="points.h" />
-    <ClInclude Include="roads.h" />
-    <ClInclude Include="shaderProcessing.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="fragmentShader.shader" />
-    <None Include="vertexShader.shader" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
