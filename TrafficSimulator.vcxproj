@@ -157,11 +157,13 @@
   <ItemGroup>
     <ClCompile Include="car.c" />
     <ClCompile Include="main.c" />
+    <ClCompile Include="points.c" />
     <ClCompile Include="roads.c" />
     <ClCompile Include="shaderProcessing.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="car.h" />
+    <ClInclude Include="points.h" />
     <ClInclude Include="roads.h" />
     <ClInclude Include="shaderProcessing.h" />
   </ItemGroup>

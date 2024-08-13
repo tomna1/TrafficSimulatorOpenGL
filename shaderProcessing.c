@@ -4,8 +4,9 @@
 
 #include <GL/glew.h>
 
-
-char* readShaderFromFile(const char* fileName) {
+// Returns a string of the data store in a shader file. The string has to be
+// freed otherwise there will be a memory leak.
+static char* readShaderFromFile(const char* fileName) {
     // VISUAL STUDIO IS TELLING ME THAT THERE ARE ERRORS EVERYWHERE IN THIS
     // FUNCTION AND I HAD TO DISABLE SOMETHING JUST SO VISUAL STUDIO COULD
     // COMPILE MY CODE BUT IT WORKS SO IM NOT GOING TO TOUCH IT AGAIN.
@@ -38,6 +39,7 @@ char* readShaderFromFile(const char* fileName) {
 // shader. If the shader fails to compile, it will print an error message
 // to the standard output but wont really do any error handling.
 static GLuint compileShader(GLuint type, const char* source) {
+    // TODO : ERROR HANDLING IF type IS NOT A VALID TYPE.
     GLuint id = glCreateShader(type);
     glShaderSource(id, 1, &source, NULL);
     glCompileShader(id);
@@ -62,8 +64,10 @@ static GLuint compileShader(GLuint type, const char* source) {
     return id;
 }
 
-
-GLuint createShaderProgram(const char *vertexShader, const char *fragmentShader) {
+// Given a pointer to the source code of the vertex shader and a pointer to
+// the source code of the fragment shader, it will compile these shaders
+// and link them to a program and will then return the id of the program.
+static GLuint createShaderProgram(const char *vertexShader, const char *fragmentShader) {
     GLuint shaderProgram = glCreateProgram();
     GLuint vs = compileShader(GL_VERTEX_SHADER, vertexShader);
     GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
@@ -73,15 +77,30 @@ GLuint createShaderProgram(const char *vertexShader, const char *fragmentShader)
     glLinkProgram(shaderProgram);
     glValidateProgram(shaderProgram);
 
-    // TODO: ACTUAL ERROR HANDLING
-    GLuint programLinkResult = 0;
+    GLuint programLinkResult;
     glGetProgramiv(shaderProgram, GL_VALIDATE_STATUS, &programLinkResult);
     if (programLinkResult == GL_FALSE) {
         printf("Program failed to Validate.\n");
+        // TODO: ACTUAL ERROR HANDLING
     }
 
     glDeleteShader(vs);
     glDeleteShader(fs);
 
+    return shaderProgram;
+}
+
+
+// Setups up the shader program based on the shader files that are called at
+// the start of the function. To read different shader files, this function
+// has to be refactored.
+GLuint setUpShaderProgram() {
+    char* vertexShader = readShaderFromFile("vertexShader.shader");
+    char* fragmentShader = readShaderFromFile("fragmentShader.shader");
+    GLuint shaderProgram = createShaderProgram(vertexShader, fragmentShader);
+    free(vertexShader);
+    free(fragmentShader);
+    glUseProgram(shaderProgram);
+    glDeleteProgram(shaderProgram);
     return shaderProgram;
 }

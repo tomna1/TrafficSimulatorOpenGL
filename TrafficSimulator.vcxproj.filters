@@ -30,6 +30,9 @@
     <ClCompile Include="shaderProcessing.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="points.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="car.h">
@@ -39,6 +42,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="shaderProcessing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="points.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

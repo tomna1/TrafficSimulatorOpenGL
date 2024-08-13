@@ -26,47 +26,62 @@ GLFWwindow *setUp();
 void framebufferSizeCallback(GLFWwindow *window, int width, int height);
 
 
+void GLAPIENTRY debugMessageCallback(GLenum source, GLenum type, GLuint id
+    , GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
+
+
 /**
 * The function in which all of the input code should be handled. This function
 * should be called every render loop.
 */
 void processInput(GLFWwindow *window);
 
-
+// THERE IS VERY MINIMAL ERROR HANDLING IN THIS PRORGAM SO IF SOMETHING GOES
+// WRONG, EVERYTHING WILL GO WRONG. IT IS NOT A BUG, IT IS A FEATURE.
 int main(void)
 {
-    GLFWwindow *window = setUp();
+    GLFWwindow* window = setUp();
     if (window == NULL) {
         return -1;
     }
 
-    float trianglePosition[] = {
-        -0.5f, -0.5,
-        0.0f, 0.5f,
-        0.5f, -0.5f
+    // Shader setup
+    GLuint shaderProgramId = setUpShaderProgram();
+
+    // Uniform setup
+    GLint location = glGetUniformLocation(shaderProgramId, "u_Color");
+    if (location == -1) {
+        printf("Uniform variable location could not be found\n");
+    }
+    glUniform4f(location, 0.2f, 0.8f, 0.3f, 1.0f);
+
+    float positions[] = {
+        -0.5f, -0.5f, // bottom left
+         0.5f, -0.5f, // bottom right
+         0.5f,  0.5f, // top right
+        -0.5f,  0.5f, // top left
     };
 
-    float rectanglePosition[] = {
-        -0.25f, -0.5f, // bottom left
-        -0.25f, 0.5f, // top left
-        0.25f, 0.5f, // top right
-        0.25f, -0.5f // bottom right
+    unsigned int indices[] = {
+        0, 1, 2,
+        2, 3, 0
     };
 
-    // buffer[0] is the triangle position and buffer[1] is the rectangle
-    // position
-    GLuint buffer[2];
-    glGenBuffers(2, &buffer);
+    GLuint buffer;
+    glGenBuffers(1, &buffer);
+    glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    glBufferData(GL_ARRAY_BUFFER, 4 * 2 * sizeof(float), &positions, GL_STATIC_DRAW);
     
-    glBindBuffer(GL_ARRAY_BUFFER, buffer[1]);
-    glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), &rectanglePosition, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-
-    glBindBuffer(GL_ARRAY_BUFFER, buffer[0]);
-    glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), &trianglePosition, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
-
     glEnableVertexAttribArray(0);
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), 0);
+
+    GLuint ibo;
+    glGenBuffers(1, &ibo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, &ibo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), &indices, GL_STATIC_DRAW);
+
+    float r = 0.0f;
+    float rIncrement = 0.01f;
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -75,8 +90,17 @@ int main(void)
         glClear(GL_COLOR_BUFFER_BIT);
 
         processInput(window);
+        
+        glUniform4f(location, r, 0.8f, 0.3f, 1.0f);
+        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, NULL);
 
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        if (r >= 1.0f) {
+            rIncrement = -0.01f;
+        }
+        else if (r <= 0.0f) {
+            rIncrement = 0.01f;
+        }
+        r += rIncrement;
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -91,13 +115,13 @@ int main(void)
 
 
 GLFWwindow *setUp() {
-    /* Initialize the library */
+    // sets up glfw.
     if (!glfwInit()) {
         printf("GLFW failed to initialise.\n");
         return NULL;
     }
     
-    /* Create a windowed mode window and its OpenGL context */
+    // Sets up glfw window.
     GLFWwindow *window = glfwCreateWindow(960, 720, "Hello World", NULL, NULL);
     if (!window)
     {
@@ -105,10 +129,10 @@ GLFWwindow *setUp() {
         glfwTerminate();
         return NULL;
     }
-    /* Make the window's context current */
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(1);
     
-    /* Glew Initialisation*/
+    // Sets up glew.
     if (glewInit() != GLEW_OK) {
         printf("GLEW failed to initialise.\n");
         glfwTerminate();
@@ -122,17 +146,12 @@ GLFWwindow *setUp() {
     glViewport(0, 0, 960, 720);
     glfwSetFramebufferSizeCallback(window, framebufferSizeCallback);
 
+    // Sets up debug message callback function
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(debugMessageCallback, NULL);
+
     // Sets the background colour of the window.
     glClearColor(0.5f, 0.1f, 0.1f, 1.0f);
-
-    // read shaders from files and use them to create a shader program
-    char *vertexShader = readShaderFromFile("vertexShader.shader");
-    char *fragmentShader = readShaderFromFile("fragmentShader.shader");
-    GLuint shaderProgram = createShaderProgram(vertexShader, fragmentShader);
-    free(vertexShader);
-    free(fragmentShader);
-    glUseProgram(shaderProgram);
-    glDeleteProgram(shaderProgram);
 
     return window;
 }
@@ -142,6 +161,108 @@ void framebufferSizeCallback(GLFWwindow *window, int width, int height) {
     // glViewport resizes everything in the window to be able to fit within
     // The size of the window
     glViewport(0, 0, width, height);
+}
+
+
+void GLAPIENTRY debugMessageCallback(GLenum source, GLenum type, GLuint id
+    , GLenum severity, GLsizei length, const GLchar* message, const void* userParam) {
+    
+    char* _source;
+    char* _type;
+    char* _severity;
+
+    switch (source) {
+        case GL_DEBUG_SOURCE_API:
+        _source = "API";
+        break;
+
+        case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
+        _source = "WINDOW SYSTEM";
+        break;
+
+        case GL_DEBUG_SOURCE_SHADER_COMPILER:
+        _source = "SHADER COMPILER";
+        break;
+
+        case GL_DEBUG_SOURCE_THIRD_PARTY:
+        _source = "THIRD PARTY";
+        break;
+
+        case GL_DEBUG_SOURCE_APPLICATION:
+        _source = "APPLICATION";
+        break;
+
+        case GL_DEBUG_SOURCE_OTHER:
+        _source = "UNKNOWN";
+        break;
+
+        default:
+        _source = "UNKNOWN";
+        break;
+    }
+
+    switch (type) {
+        case GL_DEBUG_TYPE_ERROR:
+        _type = "ERROR";
+        break;
+
+        case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
+        _type = "DEPRECATED BEHAVIOR";
+        break;
+
+        case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
+        _type = "UDEFINED BEHAVIOR";
+        break;
+
+        case GL_DEBUG_TYPE_PORTABILITY:
+        _type = "PORTABILITY";
+        break;
+
+        case GL_DEBUG_TYPE_PERFORMANCE:
+        _type = "PERFORMANCE";
+        break;
+
+        case GL_DEBUG_TYPE_OTHER:
+        _type = "OTHER";
+        break;
+
+        case GL_DEBUG_TYPE_MARKER:
+        _type = "MARKER";
+        break;
+
+        default:
+        _type = "UNKNOWN";
+        break;
+    }
+
+    switch (severity) {
+        case GL_DEBUG_SEVERITY_HIGH:
+        _severity = "HIGH";
+        break;
+
+        case GL_DEBUG_SEVERITY_MEDIUM:
+        _severity = "MEDIUM";
+        break;
+
+        case GL_DEBUG_SEVERITY_LOW:
+        _severity = "LOW";
+        break;
+
+        case GL_DEBUG_SEVERITY_NOTIFICATION:
+        _severity = "NOTIFICATION";
+        break;
+
+        default:
+        _severity = "UNKNOWN";
+        break;
+    }
+
+    printf("id = %d: type = %s, severity = %s, source = %s, message = %s\n",
+        id, _type, _severity, _source, message);
+
+    if (severity != GL_DEBUG_SEVERITY_NOTIFICATION) {
+        exit(1);
+    }
 }
 
 
