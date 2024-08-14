@@ -67,6 +67,10 @@ int main(void)
         2, 3, 0
     };
 
+    GLuint vertexArrayObject;
+    glGenVertexArrays(1, &vertexArrayObject);
+    glBindVertexArray(vertexArrayObject);
+
     GLuint buffer;
     glGenBuffers(1, &buffer);
     glBindBuffer(GL_ARRAY_BUFFER, buffer);
@@ -265,10 +269,21 @@ void GLAPIENTRY debugMessageCallback(GLenum source, GLenum type, GLuint id
     }
 }
 
-
+// ESC to exit, TAB to go into wireframe mode and LEFT_SHIFT to go back
+// into fill mode.
 void processInput(GLFWwindow *window) {
     // If the esc key is pressed then the window closes.
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
         glfwSetWindowShouldClose(window, true);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_TAB) == GLFW_PRESS) {
+        // TODO: SWITCH BETWEEN LINES AND FILLED RATHER THAN JUST SWITCHING
+        // TO LINES AND NOT BEING ABLE TO SWITCH BACK
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
 }
