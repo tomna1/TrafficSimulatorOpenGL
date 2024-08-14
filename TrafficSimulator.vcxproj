@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\car.c" />
+    <ClCompile Include="src\LinkedList.c" />
     <ClCompile Include="src\main.c" />
     <ClCompile Include="src\points.c" />
     <ClCompile Include="src\roads.c" />
@@ -31,7 +32,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\car.h" />
+    <ClInclude Include="include\graph.h" />
     <ClInclude Include="include\grid.h" />
+    <ClInclude Include="include\LinkedList.h" />
     <ClInclude Include="include\points.h" />
     <ClInclude Include="include\roads.h" />
     <ClInclude Include="include\shaderProcessing.h" />

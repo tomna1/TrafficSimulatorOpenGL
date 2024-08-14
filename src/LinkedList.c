@@ -8,6 +8,7 @@ LinkedList *createLinkedList() {
     list->size = 0;
     list->head = NULL;
     list->lastNode = NULL;
+    return list;
 }
 
 void push(LinkedList *list, void *data, size_t dataSize) {

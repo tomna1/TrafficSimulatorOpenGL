@@ -66,6 +66,10 @@ intersection has to have traffic lights to function. Below is an example.
 
 ![4 way intersection](/example_images/four_way_intersection_traffic_lights.png)
 
+## Crossings
+
+Some roads can also have crossing on them. TODO: WRITE THE REST OF THIS
+
 
 ## Road Connections Implementation
 
