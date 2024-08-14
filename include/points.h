@@ -2,21 +2,21 @@
 #define POINTS___H
 
 // A point with x and y both being integers.
-typedef struct point2i {
+typedef struct Point2i {
 	int x;
 	int y;
-} point2i;
+} Point2i;
 
 // A point with x and y both being floats.
-typedef struct point2f {
+typedef struct Point2f {
 	float x;
 	float y;
-} point2f;
+} Point2f;
 
 // A point with x and y both being doubles.
-typedef struct point2d {
+typedef struct Point2d {
 	double x;
 	double y;
-} point2d;
+} Point2d;
 
 #endif
