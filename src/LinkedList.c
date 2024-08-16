@@ -11,6 +11,7 @@ LinkedList *createLinkedList() {
     return list;
 }
 
+
 void push(LinkedList *list, void *data, size_t dataSize) {
     // Allocate memory for node 
     LinkedListNode *newNode = (LinkedListNode *)malloc(sizeof(LinkedListNode));
@@ -33,8 +34,24 @@ void push(LinkedList *list, void *data, size_t dataSize) {
         list->lastNode = newNode;
     }
     list->size++;
-
 }
+
+
+// Returns a pointer to the data stored in the node.
+void *getItem(LinkedList *list, int index) {
+    if (index + 1 > list->size) {
+        return NULL;
+    }
+
+    LinkedListNode *node = list->head;
+
+    for (int i = 0; i < index; i++) {
+        node = node->next;
+    }
+
+    return node->data;
+}
+
 
 // Remove the last node of the linked list.
 void removeLast(LinkedList *list) {
@@ -56,27 +73,14 @@ void removeLast(LinkedList *list) {
     list->size--;
 }
 
-// Returns a pointer to the data stored in the node.
-void *getItem(LinkedList *list, int index) {
-    if (index + 1 > list->size) {
-        return NULL;
-    }
-
-    LinkedListNode *node = list->head;
-
-    for (int i = 0; i < index; i++) {
-        node = node->next;
-    }
-
-    return node->data;
-}
-
 // Remove everything from the list.
 void destroyList(LinkedList *list) {
     while (list->size > 0) {
         removeLast(list);
     }
+    free(list);
 }
+
 
 // Print the LinkedList given the list and a function to print the data
 // store in the linked list.

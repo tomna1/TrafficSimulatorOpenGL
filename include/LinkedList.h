@@ -20,12 +20,12 @@ LinkedList *createLinkedList();
 // pointer points to.
 void push(LinkedList *list, void *data, size_t dataSize);
 
-// Removes the last data value of the linked list. If the list is empty, it will not do anything
-void removeLast(LinkedList *list);
-
 // Returns a pointer to the data in the specified index. If the index is greater than size, returns
 // NULL.
 void *getItem(LinkedList *list, int index);
+
+// Removes the last data value of the linked list. If the list is empty, it will not do anything
+void removeLast(LinkedList *list);
 
 // Destroys the entire linked list
 void destroyList(LinkedList *list);
